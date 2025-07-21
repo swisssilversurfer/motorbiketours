@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>Motorradtouren</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
   <style>
@@ -15,13 +15,38 @@
     }
     #header {
       background-color: #fff;
-      padding: 1rem;
+      padding: 1rem 1.5rem;
       border-bottom: 1px solid #ccc;
       display: flex;
-      justify-content: space-between;
       align-items: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    #header h2 {
+      flex-shrink: 0;
+      font-size: 1.5rem;
+      color: #333;
+    }
+    .filter-group {
+      display: flex;
+      align-items: center;
+      font-size: 0.9rem;
+      color: #333;
+    }
+    .filter-group label {
+      margin-right: 0.4rem;
+      white-space: nowrap;
+    }
+    .filter-group select {
+      padding: 0.3rem 0.5rem;
+      font-size: 0.9rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      cursor: pointer;
+      background: white;
     }
     #viewToggle {
+      margin-left: auto;
       padding: 0.4rem 0.8rem;
       font-size: 0.9rem;
       cursor: pointer;
@@ -29,6 +54,8 @@
       color: white;
       border: none;
       border-radius: 5px;
+      flex-shrink: 0;
+      white-space: nowrap;
     }
     #container {
       display: flex;
@@ -43,11 +70,6 @@
     }
     #map {
       flex-grow: 1;
-    }
-    h2 {
-      margin-bottom: 1rem;
-      font-size: 1.5rem;
-      color: #333;
     }
     .tour-item {
       margin-bottom: 2rem;
@@ -69,6 +91,16 @@
       font-weight: bold;
       font-size: 1.2rem;
       margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .tour-title img.flag {
+      width: 24px;
+      height: 16px;
+      border: 1px solid #ccc;
+      border-radius: 2px;
+      flex-shrink: 0;
     }
     .tour-desc, .tour-info, .tour-besonderheiten {
       font-size: 0.9rem;
@@ -83,23 +115,15 @@
     .tour-download:hover {
       text-decoration: underline;
     }
-    .filter-group {
-      margin-bottom: 1rem;
-    }
-    .filter-group label {
-      font-size: 0.9rem;
-      margin-right: 0.5rem;
-    }
-    .filter-group select {
-      padding: 0.3rem;
-      font-size: 0.9rem;
-    }
     #galleryView {
       display: none;
       padding: 1.5rem;
       flex-wrap: wrap;
       gap: 2rem;
       justify-content: center;
+      background-color: #f9f9f9;
+      overflow-y: auto;
+      max-height: calc(100vh - 64px);
     }
     .gallery-item {
       width: 300px;
@@ -107,11 +131,14 @@
       border-radius: 8px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       padding: 1rem;
+      max-height: 450px;
+      overflow-y: auto;
     }
     .gallery-item img {
       width: 100%;
       border-radius: 5px;
       margin-bottom: 0.7rem;
+      cursor: pointer;
     }
   </style>
 </head>
@@ -119,35 +146,38 @@
 
 <div id="header">
   <h2>Tourenübersicht</h2>
+
+  <div class="filter-group">
+    <label for="regionFilter">Region:</label>
+    <select id="regionFilter">
+      <option value="">Alle</option>
+      <option value="Frankreich">Frankreich</option>
+      <option value="Italien">Italien</option>
+      <option value="Schweiz">Schweiz</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="levelFilter">Schwierigkeit:</label>
+    <select id="levelFilter">
+      <option value="">Alle</option>
+      <option value="Leicht">Leicht</option>
+      <option value="Mittel">Mittel</option>
+      <option value="Schwer">Schwer</option>
+    </select>
+  </div>
+
   <button id="viewToggle">Galerie anzeigen</button>
 </div>
 
 <div id="container">
   <div id="sidebar">
-    <div class="filter-group">
-      <label for="regionFilter">Region:</label>
-      <select id="regionFilter">
-        <option value="">Alle</option>
-        <option value="Frankreich">Frankreich</option>
-        <option value="Italien">Italien</option>
-        <option value="Schweiz">Schweiz</option>
-      </select>
-    </div>
-    <div class="filter-group">
-      <label for="levelFilter">Schwierigkeit:</label>
-      <select id="levelFilter">
-        <option value="">Alle</option>
-        <option value="Leicht">Leicht</option>
-        <option value="Mittel">Mittel</option>
-        <option value="Schwer">Schwer</option>
-      </select>
-    </div>
     <div id="tourList"></div>
   </div>
   <div id="map"></div>
 </div>
 
-<div id="galleryView" style="display: none; flex-direction: row; flex-wrap: wrap;"></div>
+<div id="galleryView" style="display: none; flex-direction: row;"></div>
 
 <!-- SCRIPTS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -155,6 +185,13 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/js/lightbox.min.js"></script>
 
 <script>
+  // Flags als Data-URLs (kleine SVGs)
+  const flags = {
+    "Frankreich": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='8' height='16' fill='%230034bf'/%3e%3crect x='8' width='8' height='16' fill='%23fff'/%3e%3crect x='16' width='8' height='16' fill='%23ed2939'/%3e%3c/svg%3e",
+    "Italien": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='8' height='16' fill='%23009641'/%3e%3crect x='8' width='8' height='16' fill='%23fff'/%3e%3crect x='16' width='8' height='16' fill='%23ce2b37'/%3e%3c/svg%3e",
+    "Schweiz": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3crect width='16' height='16' fill='%23ff0000'/%3e%3crect x='6' y='3' width='4' height='10' fill='%23fff'/%3e%3crect x='3' y='6' width='10' height='4' fill='%23fff'/%3e%3c/svg%3e"
+  };
+
   const touren = [
     {
       name: "Colle del Sommeiller",
@@ -208,7 +245,8 @@
       besonderheiten: "Bergpässe möglicherweise für Veranstaltungen gesperrt",
       region: "Frankreich",
       schwierigkeit: "Leicht"
-    }  ];
+    }
+  ];
 
   const map = L.map('map').setView([45.1, 6.74], 11);
 
@@ -264,8 +302,13 @@
       const item = document.createElement("div");
       item.className = "tour-item";
       item.innerHTML = `
-        <a href="${t.bilder[0]}" data-lightbox="${t.name}" data-title="${t.name}"><img src="${t.bilder[0]}" alt="${t.name}"></a>
-        <div class="tour-title">${t.name}</div>
+        <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}">
+          <img src="${t.bilder[0]}" alt="${t.name}">
+        </a>
+        <div class="tour-title">
+          <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
+          ${t.name}
+        </div>
         <div class="tour-desc">${t.beschreibung}</div>
         <div class="tour-info">Strecke: ${t.distanz}</div>
         <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
@@ -279,19 +322,23 @@
       galleryItem.className = "gallery-item";
 
       let galleryHTML = `
-        <a href="${t.bilder[0]}" data-lightbox="${t.name}" data-title="${t.name}: ${t.beschreibung}">
+        <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}">
           <img src="${t.bilder[0]}" alt="${t.name}">
         </a>
-        <div class="tour-title">${t.name}</div>
+        <div class="tour-title">
+          <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
+          ${t.name}
+        </div>
         <div class="tour-desc">${t.beschreibung}</div>
         <div class="tour-info">Strecke: ${t.distanz}</div>
         <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
         <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
       `;
 
+      // Versteckte Bilder für Lightbox
       for (let i = 1; i < t.bilder.length; i++) {
         galleryHTML += `
-          <a href="${t.bilder[i]}" data-lightbox="${t.name}" data-title="${t.name}: ${t.beschreibung}"></a>
+          <a href="${t.bilder[i]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}" style="display:none;"></a>
         `;
       }
 
