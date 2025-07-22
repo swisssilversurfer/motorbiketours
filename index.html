@@ -20,6 +20,9 @@
   width: 100%;
 }
 
+:root {
+  --sidebar-width: 360px;
+}
 
 #header {
   position: fixed;
@@ -87,6 +90,7 @@
 }
 
 #sidebar-container {
+  z-index: 1;
   width: 360px;
   height: 100%;
   overflow-y: auto;
@@ -103,7 +107,7 @@
   top: 64px; /* direkt unter dem Header */
   right: 0;
   bottom: 0;
-  left: 360px; /* damit die Karte nicht unter der Sidebar liegt */
+  left: var(--sidebar-width, 360px); /* damit die Karte nicht über der Sidebar liegt */
   z-index: 0;
 }
 
