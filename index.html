@@ -7,145 +7,232 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
   <style>
-    * { margin: 0; padding: 0; box-sizing: border-box; }
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background-color: #f1f1f1;
-      color: #333;
-    }
-    #header {
-      background-color: #fff;
-      padding: 1rem 1.5rem;
-      border-bottom: 1px solid #ccc;
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-      flex-wrap: wrap;
-    }
-    #header h2 {
-      flex-shrink: 0;
-      font-size: 1.5rem;
-      color: #333;
-    }
-    .filter-group {
-      display: flex;
-      align-items: center;
-      font-size: 0.9rem;
-      color: #333;
-    }
-    .filter-group label {
-      margin-right: 0.4rem;
-      white-space: nowrap;
-    }
-    .filter-group select {
-      padding: 0.3rem 0.5rem;
-      font-size: 0.9rem;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      cursor: pointer;
-      background: white;
-    }
-    #viewToggle {
-      margin-left: auto;
-      padding: 0.4rem 0.8rem;
-      font-size: 0.9rem;
-      cursor: pointer;
-      background-color: #0066cc;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      flex-shrink: 0;
-      white-space: nowrap;
-    }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f1f1f1;
+    color: #333;
+  }
+
+  #header {
+    background-color: #fff;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  #header h2 {
+    flex-shrink: 0;
+    font-size: 1.5rem;
+    color: #333;
+  }
+
+  .filter-group {
+    display: flex;
+    align-items: center;
+    font-size: 0.9rem;
+    color: #333;
+  }
+
+  .filter-group label {
+    margin-right: 0.4rem;
+    white-space: nowrap;
+  }
+
+  .filter-group select {
+    padding: 0.3rem 0.5rem;
+    font-size: 0.9rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    cursor: pointer;
+    background: white;
+  }
+
+  #viewToggle {
+    margin-left: auto;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+
+  #container {
+    display: flex;
+    height: calc(100vh - 64px);
+  }
+
+  #sidebar {
+    width: 360px;
+    background-color: #fff;
+    overflow-y: auto;
+    padding: 1.5rem;
+    border-right: 1px solid #ccc;
+  }
+
+  #map {
+    flex-grow: 1;
+  }
+
+  .tour-item {
+    margin-bottom: 2rem;
+    cursor: pointer;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 1rem;
+    transition: background-color 0.2s ease;
+  }
+
+  .tour-item:hover {
+    background-color: #f0f8ff;
+  }
+
+  .tour-item img {
+    width: 100%;
+    height: auto;
+    margin-bottom: 0.7rem;
+    border-radius: 5px;
+  }
+
+  .tour-title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .tour-title img.flag {
+    width: 24px;
+    height: 16px;
+    border: 1px solid #ccc;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .tour-desc,
+  .tour-info,
+  .tour-besonderheiten {
+    font-size: 0.9rem;
+    color: #555;
+    margin-bottom: 0.4rem;
+  }
+
+  .tour-download {
+    font-size: 0.85rem;
+    color: #0066cc;
+    text-decoration: none;
+  }
+
+  .tour-download:hover {
+    text-decoration: underline;
+  }
+
+  #galleryView {
+    display: none;
+    padding: 1.5rem;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: center;
+    background-color: #f9f9f9;
+    overflow-y: auto;
+    max-height: calc(100vh - 64px);
+  }
+
+  .gallery-item {
+    width: 300px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    padding: 1rem;
+    max-height: 450px;
+    overflow-y: auto;
+  }
+
+  .gallery-item img {
+    width: 100%;
+    border-radius: 5px;
+    margin-bottom: 0.7rem;
+    cursor: pointer;
+  }
+
+  .tour-item.active {
+  background-color: #e6f2ff;
+  border-left: 4px solid #0066cc;
+  }
+
+  .leaflet-tour-title {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4px 10px;
+  margin-top: 10px;
+  margin-left: 5px;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 14px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.2);
+}
+
+
+
+  /* ---------- Responsive Anpassungen für Mobilgeräte ---------- */
+  @media (max-width: 768px) {
     #container {
-      display: flex;
-      height: calc(100vh - 64px);
-    }
-    #sidebar {
-      width: 360px;
-      background-color: #fff;
-      overflow-y: auto;
-      padding: 1.5rem;
-      border-right: 1px solid #ccc;
-    }
-    #map {
-      flex-grow: 1;
-    }
-    .tour-item {
-      margin-bottom: 2rem;
-      cursor: pointer;
-      border-bottom: 1px solid #ddd;
-      padding-bottom: 1rem;
-      transition: background-color 0.2s ease;
-    }
-    .tour-item:hover {
-      background-color: #f0f8ff;
-    }
-    .tour-item img {
-      width: 100%;
+      flex-direction: column;
       height: auto;
-      margin-bottom: 0.7rem;
-      border-radius: 5px;
     }
-    .tour-title {
-      font-weight: bold;
-      font-size: 1.2rem;
-      margin-bottom: 0.4rem;
-      display: flex;
-      align-items: center;
+
+    #sidebar {
+      width: 100%;
+      border-right: none;
+      border-bottom: 1px solid #ccc;
+      padding: 1rem;
+      max-height: 50vh;
+      overflow-y: auto;
+    }
+
+    #map {
+      height: 50vh;
+    }
+
+    #header {
+      flex-direction: column;
+      align-items: flex-start;
       gap: 0.5rem;
     }
-    .tour-title img.flag {
-      width: 24px;
-      height: 16px;
-      border: 1px solid #ccc;
-      border-radius: 2px;
-      flex-shrink: 0;
-    }
-    .tour-desc, .tour-info, .tour-besonderheiten {
-      font-size: 0.9rem;
-      color: #555;
-      margin-bottom: 0.4rem;
-    }
-    .tour-download {
-      font-size: 0.85rem;
-      color: #0066cc;
-      text-decoration: none;
-    }
-    .tour-download:hover {
-      text-decoration: underline;
-    }
-    #galleryView {
-      display: none;
-      padding: 1.5rem;
-      flex-wrap: wrap;
-      gap: 2rem;
-      justify-content: center;
-      background-color: #f9f9f9;
-      overflow-y: auto;
-      max-height: calc(100vh - 64px);
-    }
-    .gallery-item {
-      width: 300px;
-      background-color: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      padding: 1rem;
-      max-height: 450px;
-      overflow-y: auto;
-    }
-    .gallery-item img {
+
+    .filter-group {
       width: 100%;
-      border-radius: 5px;
-      margin-bottom: 0.7rem;
-      cursor: pointer;
+      justify-content: space-between;
     }
-  </style>
+
+    #viewToggle {
+      width: 100%;
+      margin-left: 0;
+    }
+
+    .gallery-item {
+      width: 100%;
+    }
+
+    #galleryView {
+      flex-direction: column;
+      align-items: center;
+    }
+}
+</style>
 </head>
 <body>
 
 <div id="header">
-  <h2>Tourenübersicht</h2>
+  <h2>Motorradtouren</h2>
 
   <div class="filter-group">
     <label for="regionFilter">Region:</label>
@@ -154,6 +241,7 @@
       <option value="Frankreich">Frankreich</option>
       <option value="Italien">Italien</option>
       <option value="Schweiz">Schweiz</option>
+      <option value="Europa">Europa</option>
     </select>
   </div>
 
@@ -164,6 +252,16 @@
       <option value="Leicht">Leicht</option>
       <option value="Mittel">Mittel</option>
       <option value="Schwer">Schwer</option>
+    </select>
+  </div>
+
+  <div class="filter-group">
+    <label for="surfaceFilter">Strassenbelag:</label>
+    <select id="surfaceFilter">
+      <option value="">Alle</option>
+      <option value="Strasse">Strasse</option>
+      <option value="off-road">off-road</option>
+      <option value="Gemischt">Gemischt</option>
     </select>
   </div>
 
@@ -189,8 +287,9 @@
   const flags = {
     "Frankreich": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='8' height='16' fill='%230034bf'/%3e%3crect x='8' width='8' height='16' fill='%23fff'/%3e%3crect x='16' width='8' height='16' fill='%23ed2939'/%3e%3c/svg%3e",
     "Italien": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='8' height='16' fill='%23009641'/%3e%3crect x='8' width='8' height='16' fill='%23fff'/%3e%3crect x='16' width='8' height='16' fill='%23ce2b37'/%3e%3c/svg%3e",
-    "Schweiz": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3crect width='16' height='16' fill='%23ff0000'/%3e%3crect x='6' y='3' width='4' height='10' fill='%23fff'/%3e%3crect x='3' y='6' width='10' height='4' fill='%23fff'/%3e%3c/svg%3e"
-  };
+    "Schweiz": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3crect width='16' height='16' fill='%23ff0000'/%3e%3crect x='6' y='3' width='4' height='10' fill='%23fff'/%3e%3crect x='3' y='6' width='10' height='4' fill='%23fff'/%3e%3c/svg%3e",
+    "Europa": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='24' height='16' fill='%230072c6'/%3e%3cg fill='%23ffd700'%3e%3ccircle cx='12' cy='3' r='0.9'/%3e%3ccircle cx='14.8' cy='3.8' r='0.9'/%3e%3ccircle cx='17' cy='6' r='0.9'/%3e%3ccircle cx='17.8' cy='8.8' r='0.9'/%3e%3ccircle cx='17' cy='11.6' r='0.9'/%3e%3ccircle cx='14.8' cy='13.8' r='0.9'/%3e%3ccircle cx='12' cy='14.6' r='0.9'/%3e%3ccircle cx='9.2' cy='13.8' r='0.9'/%3e%3ccircle cx='7' cy='11.6' r='0.9'/%3e%3ccircle cx='6.2' cy='8.8' r='0.9'/%3e%3ccircle cx='7' cy='6' r='0.9'/%3e%3ccircle cx='9.2' cy='3.8' r='0.9'/%3e%3c/g%3e%3c/svg%3e"
+ };
  // Tourenbeschreibungen
   const touren = [
     {
@@ -203,7 +302,8 @@
       distanz: "25 km",
       besonderheiten: "Geschlossen Dienstag & Donnerstag. Mautpflicht (8 EUR zu zahlen am Mauthäuschen).",
       region: "Italien",
-      schwierigkeit: "Mittel"
+      schwierigkeit: "Mittel",
+      strassenbelag: "off-road"
     },
     {
       name: "Monte Jafferau",
@@ -215,7 +315,8 @@
       distanz: "46 km",
       besonderheiten: "Geschlossen Montag, Freitag, Sonntag",
       region: "Italien",
-      schwierigkeit: "Mittel"
+      schwierigkeit: "Mittel",
+      strassenbelag: "off-road"
     },
     {
       name: "Assietta-Kammstraße",
@@ -227,7 +328,8 @@
       distanz: "53 km",
       besonderheiten: "Geschlossen Mittwoch & Samstag",
       region: "Italien",
-      schwierigkeit: "Leicht"
+      schwierigkeit: "Leicht",
+      strassenbelag: "off-road"
     },
     {
       name: "Route des Grandes Alpes",
@@ -239,7 +341,8 @@
       distanz: "736 km",
       besonderheiten: "Bergpässe möglicherweise für Veranstaltungen gesperrt",
       region: "Frankreich",
-      schwierigkeit: "Leicht"
+      schwierigkeit: "Leicht",
+      strassenbelag: "Strasse"
     },
     {
       name: "Grengiols - Heiligkreuz",
@@ -251,11 +354,37 @@
       distanz: "38 km",
       besonderheiten: "Mautpflichtig (CHF 25 pro Tag)",
       region: "Schweiz",
-      schwierigkeit: "Leicht"
+      schwierigkeit: "Leicht",
+      strassenbelag: "off-road"
+    },
+    {
+      name: "Schwarzes Meer",
+      gpx: "gpx/EU Schwarzes-Meer.gpx",
+      bilder: [
+        "images/EU Schwarzes-Meer.jpeg",
+      ],
+      beschreibung: "Rundtour durch Polen, Slowenien, Ungarn, Rumänien.",
+      distanz: "4480 km",
+      besonderheiten: "Keine",
+      region: "Europa",
+      schwierigkeit: "Leicht",
+      strassenbelag: "Gemischt"
     }
   ];
 
+  // Base layers für Karte
   const map = L.map('map').setView([45.1, 6.74], 11);
+  
+  const tourTitleControl = L.control({ position: 'topleft' });
+
+tourTitleControl.onAdd = function(map) {
+  const div = L.DomUtil.create('div', 'leaflet-tour-title');
+  div.innerHTML = ''; // initial leer
+  return div;
+};
+
+tourTitleControl.addTo(map);
+
 
   const baseLayers = {
     "Standard": L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -273,82 +402,124 @@
 
   let currentTrack;
 
-  function loadTour(gpxFile) {
-    if (currentTrack) map.removeLayer(currentTrack);
-    currentTrack = new L.GPX(gpxFile, {
-      async: true,
-      marker_options: {
-        startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-start.png',
-        endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-end.png',
-        shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-shadow.png'
-      }
-    }).on('loaded', function(e) {
-      map.fitBounds(e.target.getBounds());
-    }).addTo(map);
+function loadTour(gpxFile) {
+  // Tour-Objekt anhand der Datei finden
+  const tour = touren.find(t => t.gpx === gpxFile);
+  if (!tour) return;
+
+  // Tourtitel in Leaflet-Control anzeigen
+  document.querySelector(".leaflet-tour-title").textContent = tour.name;
+
+  // Aktive Tour anzeigen
+  const activeDisplay = document.getElementById("activeTour");
+  if (activeDisplay) {
+    activeDisplay.textContent = `Aktive Tour: ${tour.name}`;
   }
+
+  // Vorherige Route entfernen
+  if (currentTrack) map.removeLayer(currentTrack);
+
+  // Neue Route laden
+  currentTrack = new L.GPX(gpxFile, {
+    async: true,
+    marker_options: {
+      startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-start.png',
+      endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-end.png',
+      shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-shadow.png'
+    }
+  }).on('loaded', function(e) {
+    map.fitBounds(e.target.getBounds());
+  }).addTo(map);
+
+// Visuell markieren: aktive Tour in der Liste
+document.querySelectorAll(".tour-item").forEach(el => {
+  el.classList.remove("active");
+  if (el.getAttribute("data-gpx") === gpxFile) {
+    el.classList.add("active");
+    el.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }
+});
+}
 
   const tourList = document.getElementById("tourList");
   const galleryView = document.getElementById("galleryView");
   const regionFilter = document.getElementById("regionFilter");
   const levelFilter = document.getElementById("levelFilter");
+  const surfaceFilter = document.getElementById("surfaceFilter");
 
-  function renderTouren() {
-    tourList.innerHTML = "";
-    galleryView.innerHTML = "";
+function renderTouren() {
+  tourList.innerHTML = "";
+  galleryView.innerHTML = "";
 
-    const regionValue = regionFilter.value;
-    const levelValue = levelFilter.value;
+  const regionValue = regionFilter.value;
+  const levelValue = levelFilter.value;
+  const surfaceValue = surfaceFilter.value;
 
-    const gefiltert = touren.filter(t =>
-      (!regionValue || t.region === regionValue) &&
-      (!levelValue || t.schwierigkeit === levelValue)
-    );
+  const gefiltert = touren.filter(t =>
+    (!regionValue || t.region === regionValue) &&
+    (!levelValue || t.schwierigkeit === levelValue) &&
+    (!surfaceValue || t.strassenbelag === surfaceValue)
+  );
 
-    gefiltert.forEach(t => {
-      // Seitenleiste mit Karte
-      const item = document.createElement("div");
-      item.className = "tour-item";
-      item.innerHTML = `
-        <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}">
-          <img src="${t.bilder[0]}" alt="${t.name}">
-        </a>
-        <div class="tour-title">
-          <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
-          ${t.name}
-        </div>
-        <div class="tour-desc">${t.beschreibung}</div>
-        <div class="tour-info">Strecke: ${t.distanz}</div>
-        <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
-        <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
-      `;
-      item.addEventListener("click", () => loadTour(t.gpx));
-      tourList.appendChild(item);
+  gefiltert.forEach(t => {
+// === Karten- & Listenansicht ===
+const item = document.createElement("div");
+item.className = "tour-item";
+item.setAttribute("data-gpx", t.gpx); // <--- NEU
 
-      // Galerieansicht
-      const galleryItem = document.createElement("div");
-      galleryItem.className = "gallery-item";
+item.innerHTML = `
+  <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}">
+    <img src="${t.bilder[0]}" alt="${t.name}">
+  </a>
+  <div class="tour-title">
+    <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
+    ${t.name}
+  </div>
+  <div class="tour-desc">${t.beschreibung}</div>
+  <div class="tour-info">Strecke: ${t.distanz}</div>
+  <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
+  <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
+`;
+item.addEventListener("click", () => loadTour(t.gpx));
+tourList.appendChild(item);
 
-      let galleryHTML = `
-        <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}">
-          <img src="${t.bilder[0]}" alt="${t.name}">
-        </a>
-        <div class="tour-title">
-          <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
-          ${t.name}
-        </div>
-        <div class="tour-desc">${t.beschreibung}</div>
-        <div class="tour-info">Strecke: ${t.distanz}</div>
-        <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
-        <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
-      `;
+    // === Galerieansicht ===
+    const galleryItem = document.createElement("div");
+    galleryItem.className = "gallery-item";
 
-      galleryItem.innerHTML = galleryHTML;
-      galleryView.appendChild(galleryItem);
+    galleryItem.innerHTML = `
+      <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}">
+        <img src="${t.bilder[0]}" alt="${t.name}">
+      </a>
+      <div class="tour-title">
+        <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
+        ${t.name}
+      </div>
+      <div class="tour-desc">${t.beschreibung}</div>
+      <div class="tour-info">Strecke: ${t.distanz}</div>
+      <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
+      <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
+    `;
+
+    // Galerie-Klickverhalten: Wechsel zur Kartenansicht & Tour laden
+    galleryItem.addEventListener("click", (e) => {
+      // Nur wechseln, wenn nicht auf Bild geklickt wurde (damit Lightbox funktioniert)
+      if (e.target.tagName !== 'IMG' && e.target.tagName !== 'A') {
+        document.getElementById("container").style.display = "flex";
+        galleryView.style.display = "none";
+        toggleBtn.textContent = "Galerie anzeigen";
+        loadTour(t.gpx);
+      }
     });
-  }
+
+    galleryView.appendChild(galleryItem);
+  });
+}
+
 
   regionFilter.addEventListener("change", renderTouren);
   levelFilter.addEventListener("change", renderTouren);
+  surfaceFilter.addEventListener("change", renderTouren);
 
   // Ansicht umschalten
   const toggleBtn = document.getElementById("viewToggle");
