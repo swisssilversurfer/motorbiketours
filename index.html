@@ -15,15 +15,22 @@
     color: #333;
   }
 
-  #header {
-    background-color: #fff;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid #ccc;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    flex-wrap: wrap;
-  }
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  background-color: #fff;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid #ccc;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+  z-index: 1000; /* Damit der Header über allem liegt */
+  height: 64px; /* Fixe Höhe, passt zum Padding + Border */
+  box-sizing: border-box;
+}
 
   #header h2 {
     flex-shrink: 0;
@@ -68,6 +75,7 @@
   #container {
     display: flex;
     height: calc(100vh - 64px);
+    margin-top: 64px;
   }
 
   #sidebar {
@@ -145,6 +153,7 @@
     background-color: #f9f9f9;
     overflow-y: auto;
     max-height: calc(100vh - 64px);
+    margin-top: 64px;
   }
 
   .gallery-item {
