@@ -189,53 +189,64 @@
   box-shadow: 0 1px 4px rgba(0,0,0,0.2);
 }
 
-
-
   /* ---------- Responsive Anpassungen für Mobilgeräte ---------- */
-  @media (max-width: 768px) {
-    #container {
-      flex-direction: column;
-      height: auto;
-    }
+@media (max-width: 768px) {
+  #header {
+    flex-direction: column;
+    align-items: stretch;
+    height: auto;
+    padding: 1rem;
+    gap: 1rem;
+  }
 
-    #sidebar {
-      width: 100%;
-      border-right: none;
-      border-bottom: 1px solid #ccc;
-      padding: 1rem;
-      max-height: 50vh;
-      overflow-y: auto;
-    }
+  .filter-group {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+  }
 
-    #map {
-      height: 50vh;
-    }
+  .filter-group label {
+    margin-bottom: 0.3rem;
+  }
 
-    #header {
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.5rem;
-    }
+  .filter-group select {
+    width: 100%;
+  }
 
-    .filter-group {
-      width: 100%;
-      justify-content: space-between;
-    }
+  #viewToggle {
+    width: 100%;
+    margin-left: 0;
+    align-self: stretch;
+  }
 
-    #viewToggle {
-      width: 100%;
-      margin-left: 0;
-    }
+  #container {
+    flex-direction: column;
+    height: auto;
+  }
 
-    .gallery-item {
-      width: 100%;
-    }
+  #sidebar {
+    width: 100%;
+    max-height: 50vh;
+    overflow-y: auto;
+    border-bottom: 1px solid #ccc;
+    border-right: none;
+    padding: 1rem;
+  }
 
-    #galleryView {
-      flex-direction: column;
-      align-items: center;
-    }
+  #map {
+    height: 50vh;
+  }
+
+  .gallery-item {
+    width: 100%;
+  }
+
+  #galleryView {
+    flex-direction: column;
+    align-items: center;
+  }
 }
+
 </style>
 </head>
 <body>
@@ -304,7 +315,7 @@
     {
       name: "Colle del Sommeiller",
       gpx: "gpx/IT Bardonecchia-Colle-del-Sommeiller.gpx",
-      bilder: [
+      bild: [
         "images/IT Bardonecchia-Colle-del-Sommeiller.jpeg"
       ],
       beschreibung: "Schotterstrecke auf über 3000m – einer der höchsten legal befahrbaren Wege Europas.",
@@ -317,7 +328,7 @@
     {
       name: "Monte Jafferau",
       gpx: "gpx/IT Monte-Jafferau.gpx",
-      bilder: [
+      bild: [
         "images/IT Monte-Jafferau.jpeg"
       ],
       beschreibung: "Schotterstrecke mit Gipfelfestung.",
@@ -330,7 +341,7 @@
     {
       name: "Assietta-Kammstraße",
       gpx: "gpx/IT Strada-del-Assietta.gpx",
-      bilder: [
+      bild: [
         "images/IT Strada-del-Assietta.jpeg"
       ],
       beschreibung: "Panoramastraße entlang des Kamms mit Blick auf das Susa-Tal.",
@@ -343,7 +354,7 @@
     {
       name: "Route des Grandes Alpes",
       gpx: "gpx/FR Route-des-Grandes-Alpes.gpx",
-      bilder: [
+      bild: [
         "images/FR Route-des-Grandes-Alpes.jpeg"
       ],
       beschreibung: "Über 17 Pässe von Thonon-les-Bains am Genfer See nach Menton am Mittelmeer.",
@@ -356,7 +367,7 @@
     {
       name: "Grengiols - Heiligkreuz",
       gpx: "gpx/CH Grengiols-Heiligkreuz.gpx",
-      bilder: [
+      bild: [
         "images/CH Grengiols-Heiligkreuz.jpeg",
       ],
       beschreibung: "Legale off-road Strecke im Wallis.",
@@ -369,7 +380,7 @@
     {
       name: "Schwarzes Meer",
       gpx: "gpx/EU Schwarzes-Meer.gpx",
-      bilder: [
+      bild: [
         "images/EU Schwarzes-Meer.jpeg",
       ],
       beschreibung: "Rundtour durch Polen, Slowenien, Ungarn, Rumänien.",
@@ -477,8 +488,8 @@ item.className = "tour-item";
 item.setAttribute("data-gpx", t.gpx); // <--- NEU
 
 item.innerHTML = `
-  <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}">
-    <img src="${t.bilder[0]}" alt="${t.name}">
+  <a href="${t.bild}" data-lightbox="tour-${t.name}" data-title="${t.name}">
+    <img src="${t.bild}" alt="${t.name}">
   </a>
   <div class="tour-title">
     <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
@@ -497,8 +508,8 @@ tourList.appendChild(item);
     galleryItem.className = "gallery-item";
 
     galleryItem.innerHTML = `
-      <a href="${t.bilder[0]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}">
-        <img src="${t.bilder[0]}" alt="${t.name}">
+      <a href="${t.bild}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}">
+        <img src="${t.bild}" alt="${t.name}">
       </a>
       <div class="tour-title">
         <img src="${flags[t.region] || ''}" alt="${t.region}" class="flag" />
