@@ -209,7 +209,7 @@
 
 
   /* ---------- Responsive Anpassungen für Mobilgeräte ---------- */
-  @media (max-width: 768px) {
+  @media (max-width: 1024px) {
   #container {
     flex-direction: column;
     height: auto;
@@ -261,6 +261,21 @@
       flex-direction: column;
       align-items: center;
     }
+
+    @media (max-width: 1024px) {
+  body {
+    position: relative;
+    overflow-x: hidden;
+  }
+
+  #map,
+  #container,
+  #sidebar-container {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+}
+
     /* ---------- Fix für Leaflet Controls und Tourtitel auf Mobilgeräten ---------- */
 
   .leaflet-control-container {
