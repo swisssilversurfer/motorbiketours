@@ -235,6 +235,30 @@
       flex-direction: column;
       align-items: center;
     }
+
+    /* Verschiebe alle Leaflet-Controls nach unten */
+.leaflet-top {
+  top: 80px !important; /* Abstand zur fixierten Titelleiste */
+}
+
+#map {
+  position: relative; /* wichtig für absolute Positionierung innerhalb */
+}
+
+.leaflet-tour-title {
+  position: absolute;
+  top: 80px; /* unterhalb des fixierten Headers */
+  left: 50px; /* rechts vom Zoom-Button */
+  background-color: rgba(255, 255, 255, 0.9);
+  padding: 6px 12px;
+  border-radius: 4px;
+  font-weight: bold;
+  z-index: 500;
+  pointer-events: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+  font-size: 1rem;
+}
+
 }
 </style>
 </head>
@@ -282,6 +306,7 @@
     <div id="tourList"></div>
   </div>
   <div id="map"></div>
+  <div id="mapTourTitle" class="leaflet-tour-title"></div>
 </div>
 
 <div id="galleryView" style="display: none; flex-direction: row;"></div>
@@ -417,7 +442,7 @@ function loadTour(gpxFile) {
   if (!tour) return;
 
   // Tourtitel in Leaflet-Control anzeigen
-  document.querySelector(".leaflet-tour-title").textContent = tour.name;
+ document.getElementById("mapTourTitle").textContent = tour.name;
 
   // Aktive Tour anzeigen
   const activeDisplay = document.getElementById("activeTour");
