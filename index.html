@@ -191,15 +191,13 @@
     "Italien": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='8' height='16' fill='%23009641'/%3e%3crect x='8' width='8' height='16' fill='%23fff'/%3e%3crect x='16' width='8' height='16' fill='%23ce2b37'/%3e%3c/svg%3e",
     "Schweiz": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3crect width='16' height='16' fill='%23ff0000'/%3e%3crect x='6' y='3' width='4' height='10' fill='%23fff'/%3e%3crect x='3' y='6' width='10' height='4' fill='%23fff'/%3e%3c/svg%3e"
   };
-
+ // Tourenbeschreibungen
   const touren = [
     {
       name: "Colle del Sommeiller",
-      gpx: "IT Bardonecchia-Colle-del-Sommeiller.gpx",
+      gpx: "gpx/IT Bardonecchia-Colle-del-Sommeiller.gpx",
       bilder: [
-        "images/IT Bardonecchia-Colle-del-Sommeiller_1.jpeg",
-        "images/IT Bardonecchia-Colle-del-Sommeiller_2.jpeg",
-        "images/IT Bardonecchia-Colle-del-Sommeiller_3.jpeg"
+        "images/IT Bardonecchia-Colle-del-Sommeiller.jpeg"
       ],
       beschreibung: "Schotterstrecke auf über 3000m – einer der höchsten legal befahrbaren Wege Europas.",
       distanz: "25 km",
@@ -209,10 +207,9 @@
     },
     {
       name: "Monte Jafferau",
-      gpx: "IT Monte-Jafferau.gpx",
+      gpx: "gpx/IT Monte-Jafferau.gpx",
       bilder: [
-        "images/IT Monte-Jafferau_1.jpeg",
-        "images/IT Monte-Jafferau_2.jpeg"
+        "images/IT Monte-Jafferau.jpeg"
       ],
       beschreibung: "Schotterstrecke mit Gipfelfestung.",
       distanz: "46 km",
@@ -222,10 +219,9 @@
     },
     {
       name: "Assietta-Kammstraße",
-      gpx: "IT Strada-del-Assietta.gpx",
+      gpx: "gpx/IT Strada-del-Assietta.gpx",
       bilder: [
-        "images/IT Strada-del-Assietta_1.jpeg",
-        "images/IT Strada-del-Assietta_2.jpeg"
+        "images/IT Strada-del-Assietta.jpeg"
       ],
       beschreibung: "Panoramastraße entlang des Kamms mit Blick auf das Susa-Tal.",
       distanz: "53 km",
@@ -235,10 +231,9 @@
     },
     {
       name: "Route des Grandes Alpes",
-      gpx: "FR Route-des-Grandes-Alpes.gpx",
+      gpx: "gpx/FR Route-des-Grandes-Alpes.gpx",
       bilder: [
-        "images/FR Route-des-Grandes-Alpes_1.jpeg",
-        "images/FR Route-des-Grandes-Alpes_2.jpeg"
+        "images/FR Route-des-Grandes-Alpes.jpeg"
       ],
       beschreibung: "Über 17 Pässe von Thonon-les-Bains am Genfer See nach Menton am Mittelmeer.",
       distanz: "736 km",
@@ -248,9 +243,9 @@
     },
     {
       name: "Grengiols - Heiligkreuz",
-      gpx: "CH Grengiols-Heiligkreuz.gpx",
+      gpx: "gpx/CH Grengiols-Heiligkreuz.gpx",
       bilder: [
-        "images/CH Grengiols-Heiligkreuz_1.jpeg",
+        "images/CH Grengiols-Heiligkreuz.jpeg",
       ],
       beschreibung: "Legale off-road Strecke im Wallis.",
       distanz: "38 km",
@@ -346,13 +341,6 @@
         <div class="tour-besonderheiten">Besonderheiten: ${t.besonderheiten}</div>
         <a class="tour-download" href="${t.gpx}" download>➤ GPX herunterladen</a>
       `;
-
-      // Versteckte Bilder für Lightbox
-      for (let i = 1; i < t.bilder.length; i++) {
-        galleryHTML += `
-          <a href="${t.bilder[i]}" data-lightbox="tour-${t.name}" data-title="${t.name}: ${t.beschreibung}" style="display:none;"></a>
-        `;
-      }
 
       galleryItem.innerHTML = galleryHTML;
       galleryView.appendChild(galleryItem);
