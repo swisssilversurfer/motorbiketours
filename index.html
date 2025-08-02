@@ -6,14 +6,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.4/css/lightbox.min.css" />
-  <style>
+<style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
 
-  body {
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f1f1f1;
-    color: #333;
-  }
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: #f1f1f1;
+  color: #333;
+}
 
 #header {
   position: fixed;
@@ -30,29 +30,37 @@
   z-index: 1000; /* Damit der Header über allem liegt */
   height: 64px; /* Fixe Höhe, passt zum Padding + Border */
   box-sizing: border-box;
-}
+  }
 
-  #header h2 {
+  #header h1 {
     flex-shrink: 0;
     font-size: 1.5rem;
     color: #333;
+    margin-right: 1rem;
+  }
+
+  .logo-img {
+    height: 40px; /* Resize as needed */
+    width: auto;
+    border-radius: 4px; /* Optional: rounded corners */
   }
 
   .filter-group {
+    gap: 0.5rem;
     display: flex;
     align-items: center;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     color: #333;
   }
 
   .filter-group label {
-    margin-right: 0.4rem;
+    margin-right: 0rem;
     white-space: nowrap;
   }
 
   .filter-group select {
     padding: 0.3rem 0.5rem;
-    font-size: 0.9rem;
+    font-size: 0.8rem;
     border: 1px solid #ccc;
     border-radius: 4px;
     cursor: pointer;
@@ -62,7 +70,7 @@
   #viewToggle {
     margin-left: auto;
     padding: 0.4rem 0.8rem;
-    font-size: 0.9rem;
+    font-size: 0.7rem;
     cursor: pointer;
     background-color: #0066cc;
     color: white;
@@ -72,18 +80,24 @@
     white-space: nowrap;
   }
 
+  #AllTracksBtn {
+    margin-left: auto;
+    padding: 0.4rem 0.8rem;
+    font-size: 0.7rem;
+    cursor: pointer;
+    background-color: #0066cc;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    flex-shrink: 0;
+    white-space: nowrap;
+    text-align: center;
+  }
+
   #container {
     display: flex;
     height: calc(100vh - 64px);
     margin-top: 64px;
-  }
-
-  #sidebar {
-    width: 360px;
-    background-color: #fff;
-    overflow-y: auto;
-    padding: 1.5rem;
-    border-right: 1px solid #ccc;
   }
 
   #map {
@@ -189,47 +203,48 @@
 }
 
   /* ---------- Responsive Anpassungen für Mobilgeräte ---------- */
+
 @media (max-width: 768px) {
   #header {
+    display: flex;
     flex-direction: column;
     align-items: stretch;
-    height: auto;
     padding: 1rem;
     gap: 1rem;
+    height: auto;
+  }
+
+  .logo-img {
+    display: none;
   }
 
   .filter-group {
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-  }
-
-  .filter-group label {
-    margin-bottom: 0.3rem;
-  }
-
-  .filter-group select {
-    width: 100%;
+    display: none;
   }
 
   #viewToggle {
     width: 100%;
     margin-left: 0;
     align-self: stretch;
+    text-align: center;         /* horizontal zentrieren */
+    display: flex;              /* Flexbox nutzen */
+    align-items: center;        /* vertikal zentrieren */
+    justify-content: center;    /* horizontal zentrieren */
   }
 
+  #AllTracksBtn {
+    width: 100%;
+    margin-left: 0;
+    align-self: stretch;
+    text-align: center;         /* horizontal zentrieren */
+    display: flex;              /* Flexbox nutzen */
+    align-items: center;        /* vertikal zentrieren */
+    justify-content: center;    /* horizontal zentrieren */
+  }
+  
   #container {
     flex-direction: column;
     height: auto;
-  }
-
-  #sidebar {
-    width: 100%;
-    max-height: 50vh;
-    overflow-y: auto;
-    border-bottom: 1px solid #ccc;
-    border-right: none;
-    padding: 1rem;
   }
 
   #map {
@@ -241,7 +256,7 @@
   }
 
   #galleryView {
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
   }
 }
@@ -251,7 +266,10 @@
 <body>
 
 <div id="header">
-  <h2>Motorradtouren</h2>
+
+  <img src="images/Trackers.jpeg" alt="The Tracker's Logo" class="logo-img" />
+  
+  <h1>Motorradtouren</h1>
 
   <div class="filter-group">
     <label for="regionFilter">Region:</label>
@@ -279,22 +297,35 @@
     <select id="surfaceFilter">
       <option value="">Alle</option>
       <option value="Strasse">Strasse</option>
-      <option value="off-road">off-road</option>
+      <option value="Off-road">Off-road</option>
       <option value="Gemischt">Gemischt</option>
     </select>
   </div>
 
   <button id="viewToggle">Galerie anzeigen</button>
+
+  <button id="AllTracksBtn">Karte mit allen Tracks anzeigen</button>
+
 </div>
+
+
+
+
+
+
+
+<div id="galleryView" style="display: flex;"></div>
+
 
 <div id="container">
-  <div id="sidebar">
+  <div id="sidebar" style="display: none"> <!-- Sidebar wird nicht angezeigt-->
     <div id="tourList"></div>
   </div>
-  <div id="map"></div>
+  <div id="map">
+
+  </div>
 </div>
 
-<div id="galleryView" style="display: none; flex-direction: row;"></div>
 
 <!-- SCRIPTS -->
 <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
@@ -309,7 +340,7 @@
     "Schweiz": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16'%3e%3crect width='16' height='16' fill='%23ff0000'/%3e%3crect x='6' y='3' width='4' height='10' fill='%23fff'/%3e%3crect x='3' y='6' width='10' height='4' fill='%23fff'/%3e%3c/svg%3e",
     "Europa": "data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='24' height='16'%3e%3crect width='24' height='16' fill='%230072c6'/%3e%3cg fill='%23ffd700'%3e%3ccircle cx='12' cy='3' r='0.9'/%3e%3ccircle cx='14.8' cy='3.8' r='0.9'/%3e%3ccircle cx='17' cy='6' r='0.9'/%3e%3ccircle cx='17.8' cy='8.8' r='0.9'/%3e%3ccircle cx='17' cy='11.6' r='0.9'/%3e%3ccircle cx='14.8' cy='13.8' r='0.9'/%3e%3ccircle cx='12' cy='14.6' r='0.9'/%3e%3ccircle cx='9.2' cy='13.8' r='0.9'/%3e%3ccircle cx='7' cy='11.6' r='0.9'/%3e%3ccircle cx='6.2' cy='8.8' r='0.9'/%3e%3ccircle cx='7' cy='6' r='0.9'/%3e%3ccircle cx='9.2' cy='3.8' r='0.9'/%3e%3c/g%3e%3c/svg%3e"
  };
- // Tourenbeschreibungen
+ // Tourenbeschreibungen - neue Touren hier mit allen Details ergänzen
   const touren = [
     {
       name: "Colle del Sommeiller",
@@ -322,7 +353,7 @@
       besonderheiten: "Geschlossen Dienstag & Donnerstag. Mautpflicht (8 EUR zu zahlen am Mauthäuschen).",
       region: "Italien",
       schwierigkeit: "Mittel",
-      strassenbelag: "off-road"
+      strassenbelag: "Off-road"
     },
     {
       name: "Monte Jafferau",
@@ -335,7 +366,7 @@
       besonderheiten: "Geschlossen Montag, Freitag, Sonntag",
       region: "Italien",
       schwierigkeit: "Mittel",
-      strassenbelag: "off-road"
+      strassenbelag: "Off-road"
     },
     {
       name: "Assietta-Kammstraße",
@@ -348,7 +379,7 @@
       besonderheiten: "Geschlossen Mittwoch & Samstag",
       region: "Italien",
       schwierigkeit: "Leicht",
-      strassenbelag: "off-road"
+      strassenbelag: "Off-road"
     },
     {
       name: "Route des Grandes Alpes",
@@ -374,7 +405,7 @@
       besonderheiten: "Mautpflichtig (CHF 25 pro Tag)",
       region: "Schweiz",
       schwierigkeit: "Leicht",
-      strassenbelag: "off-road"
+      strassenbelag: "Off-road"
     },
     {
       name: "Schwarzes Meer",
@@ -404,18 +435,16 @@
     }    
   ];
 
-  // Base layers für Karte
+// Base layers für Karte
   const map = L.map('map').setView([45.1, 6.74], 11);
-  
   const tourTitleControl = L.control({ position: 'topleft' });
 
-tourTitleControl.onAdd = function(map) {
-  const div = L.DomUtil.create('div', 'leaflet-tour-title');
-  div.innerHTML = ''; // initial leer
-  return div;
-};
-
-tourTitleControl.addTo(map);
+  tourTitleControl.onAdd = function(map) {
+    const div = L.DomUtil.create('div', 'leaflet-tour-title');
+    div.innerHTML = ''; // initial leer
+    return div;
+  };
+  tourTitleControl.addTo(map);
 
 
   const baseLayers = {
@@ -451,12 +480,34 @@ function loadTour(gpxFile) {
   // Vorherige Route entfernen
   if (currentTrack) map.removeLayer(currentTrack);
 
-  // Neue Route laden
+  // Alle vorherigen Tracks entfernen
+  allTracksLayers.forEach(layer => map.removeLayer(layer));
+  allTracksLayers = [];
+
+
+// Marker formatieren
+
+  const startIcon = L.icon({
+    iconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-start.png',
+    iconSize: [16, 24],     // eigene Größe (z.B. kleiner)
+    iconAnchor: [8, 24],   // Ankerpunkt unten in der Mitte
+    popupAnchor: [0, -24],  // Position des Popups relativ zum Icon
+  });
+
+  const endIcon = L.icon({
+    iconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-end.png',
+    iconSize: [16, 24],
+    iconAnchor: [8, 24],
+    popupAnchor: [0, -24],
+  });
+
+
+// Neue Route laden
   currentTrack = new L.GPX(gpxFile, {
     async: true,
     marker_options: {
-      startIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-start.png',
-      endIconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-end.png',
+      startIcon: startIcon,
+      endIcon: endIcon,
       shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-shadow.png'
     }
   }).on('loaded', function(e) {
@@ -494,6 +545,7 @@ function renderTouren() {
   );
 
   gefiltert.forEach(t => {
+
 // === Karten- & Listenansicht ===
 const item = document.createElement("div");
 item.className = "tour-item";
@@ -540,6 +592,8 @@ tourList.appendChild(item);
         document.getElementById("container").style.display = "flex";
         galleryView.style.display = "none";
         toggleBtn.textContent = "Galerie anzeigen";
+        toggleBtn.style.display="flex";
+        AllTracksBtn.style.display="none";
         loadTour(t.gpx);
       }
     });
@@ -553,22 +607,114 @@ tourList.appendChild(item);
   levelFilter.addEventListener("change", renderTouren);
   surfaceFilter.addEventListener("change", renderTouren);
 
+  
   // Ansicht umschalten
   const toggleBtn = document.getElementById("viewToggle");
-  toggleBtn.addEventListener("click", () => {
-    const isGallery = galleryView.style.display === "flex";
-    if (isGallery) {
-      document.getElementById("container").style.display = "flex";
-      galleryView.style.display = "none";
-      toggleBtn.textContent = "Galerie anzeigen";
-    } else {
-      document.getElementById("container").style.display = "none";
-      galleryView.style.display = "flex";
-      toggleBtn.textContent = "Karte & Liste anzeigen";
-    }
+  const container = document.getElementById("container");
+  
+  // Funktion zum Umschalten der Ansicht
+  function showGallery(show) {
+  if (show) {
+    // Galerie anzeigen, Karte & Button ausblenden
+    galleryView.style.display = "flex";
+    container.style.display = "none";
+    toggleBtn.style.display = "none"; // Button verstecken
+    if (AllTracksBtn) AllTracksBtn.style.display = "flex"; // Optional: anderer Button anzeigen
+  } else {
+    // Karte anzeigen, Galerie ausblenden und Button zeigen
+    galleryView.style.display = "none";
+    container.style.display = "flex";
+    toggleBtn.style.display = "inline-block"; // Button zeigen
+    if (AllTracksBtn) AllTracksBtn.style.display = "none";
+    setTimeout(() => {
+      if (typeof map !== "undefined") map.invalidateSize(); // Karte neu berechnen
+    }, 300);
+  }
+  }
+
+// Button klick: von Karte → Galerie
+toggleBtn.addEventListener("click", () => {
+  showGallery(true);
+});
+
+// Beim Laden der Seite: automatisch Galerie anzeigen
+window.addEventListener("load", () => {
+  showGallery(true);
+});
+
+
+
+let allTracksLayers = []; // Array für alle geladenen GPX-Layer
+
+// Funktion, um alle Tracks gleichzeitig anzuzeigen
+  function showAllTracks() {
+
+
+// Ansicht auf Karte umschalten
+galleryView.style.display = "none";
+container.style.display = "flex";
+toggleBtn.style.display = "inline-block"; // Galerie-Button wieder einblenden
+if (AllTracksBtn) AllTracksBtn.style.display = "none"; // Diesen Button ggf. ausblenden
+setTimeout(() => {
+  if (typeof map !== "undefined") map.invalidateSize(); // Kartenanzeige aktualisieren
+}, 300);
+
+// Vorherige einzelne Track entfernen
+  if (currentTrack) {
+    map.removeLayer(currentTrack);
+    currentTrack = null;
+  }
+// Alle vorherigen Tracks entfernen
+  allTracksLayers.forEach(layer => map.removeLayer(layer));
+  allTracksLayers = [];
+
+// Bounds-Objekt zum Sammeln aller Bounds
+  const groupBounds = L.latLngBounds();
+
+// Marker formatieren
+
+  const startIcon = L.icon({
+    iconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-start.png',
+    iconSize: [16, 24],     // eigene Größe (z.B. kleiner)
+    iconAnchor: [8, 24],   // Ankerpunkt unten in der Mitte
+    popupAnchor: [0, -24],  // Position des Popups relativ zum Icon
   });
 
-  // Initial anzeigen
+  const endIcon = L.icon({
+    iconUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-icon-end.png',
+    iconSize: [16, 24],
+    iconAnchor: [8, 24],
+    popupAnchor: [0, -24],
+  });
+
+// Alle GPX-Dateien laden
+  touren.forEach(tour => {
+    const gpxLayer = new L.GPX(tour.gpx, {
+      async: true,
+      marker_options: {
+        startIcon: startIcon,
+        endIcon: endIcon,
+        shadowUrl: 'https://unpkg.com/leaflet-gpx@1.5.0/pin-shadow.png'
+      }
+    }).on('loaded', e => {
+      groupBounds.extend(e.target.getBounds());
+      // Nach dem Laden aller Tracks (hier nicht exakt, aber OK für UX) Karte auf alle Tracks zoomen
+      map.fitBounds(groupBounds);
+    }).addTo(map);
+
+    allTracksLayers.push(gpxLayer);
+  });
+
+// Leaflet-Tourtitel leeren oder passend setzen
+  document.querySelector(".leaflet-tour-title").textContent = "Alle Tracks";
+
+// In der Liste keine aktive Tour markieren
+  document.querySelectorAll(".tour-item").forEach(el => el.classList.remove("active"));
+}
+document.getElementById("AllTracksBtn").addEventListener("click", showAllTracks);
+
+
+// Initial anzeigen
   renderTouren();
   loadTour(touren[0].gpx);
 </script>
