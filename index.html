@@ -587,16 +587,17 @@ tourList.appendChild(item);
 
     // Galerie-Klickverhalten: Wechsel zur Kartenansicht & Tour laden
     galleryItem.addEventListener("click", (e) => {
-      // Nur wechseln, wenn nicht auf Bild geklickt wurde (damit Lightbox funktioniert)
-      if (e.target.tagName !== 'IMG' && e.target.tagName !== 'A') {
-        document.getElementById("container").style.display = "flex";
-        galleryView.style.display = "none";
-        toggleBtn.textContent = "Galerie anzeigen";
-        toggleBtn.style.display="flex";
-        AllTracksBtn.style.display="none";
-        loadTour(t.gpx);
-      }
-    });
+  e.preventDefault();  // unterbindet Öffnen der Lightbox
+  e.stopPropagation(); // verhindert Weiterleitung an Lightbox
+
+  document.getElementById("container").style.display = "flex";
+  galleryView.style.display = "none";
+  toggleBtn.textContent = "Galerie anzeigen";
+  toggleBtn.style.display = "flex";
+  AllTracksBtn.style.display = "none";
+  loadTour(t.gpx);
+});
+
 
     galleryView.appendChild(galleryItem);
   });
